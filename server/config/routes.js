@@ -1,4 +1,5 @@
 const userController = require('../controller/userController');
+const menuController = require('../controller/menuController');
 
 module.exports = function(app, router) {
 
@@ -8,6 +9,9 @@ router.use(function(req, res, next) {
 
 });
 
+//______________________________________________________________________________________________
+//----------------------------------User API----------------------------------------------------
+//______________________________________________________________________________________________
 
 router.route('/users/checkuser').post(function(req, res) {
 
@@ -40,5 +44,19 @@ router.route('/users/:user_id*?')
         userController.delete(req, res);
 
     });
+
+//______________________________________________________________________________________________
+//----------------------------------Menu API----------------------------------------------------
+//______________________________________________________________________________________________
+
+    router.route('/menu/:id*?').get((req, res) => {
+
+        menuController.index(req, res);
+
+    })
+
+   .post((req, res) => {
+        menuController.add(req, res);
+   })
 
 }

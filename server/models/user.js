@@ -8,7 +8,6 @@ var userSchema = new Schema({
   password: String,
   email: { type: String, index: true },
   role: String,
-  menu: [{icon: String, title: String, link: String}]
 });
 
 var User = mongoose.model("User", userSchema);

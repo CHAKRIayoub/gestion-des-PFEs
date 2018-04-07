@@ -4,7 +4,7 @@
     <v-container fill-height>
       <v-layout align-center>
         <v-flex>
-          <!-- <h3 class="display-3"> Bonjour cher Etudiant {{ AuthUser.nom }}  </h3> -->
+          <h3 class="display-3"> Bonjour cher Etudiant  </h3>
           <span class="subheading">bonjour maison debarque maroc pour tetouan master il faut id. Vis maluisset molestiae id, ad semper lobortis cum. At impetus detraxit incorrupte usu, repudiare assueverit ex eum, ne nam essent vocent admodum.</span>
           <v-divider class="my-3"></v-divider>
           <div class="title mb-3">Principale</div>

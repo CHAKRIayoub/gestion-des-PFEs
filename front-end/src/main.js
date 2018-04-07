@@ -1,54 +1,18 @@
 import Vue from 'vue'
-import Router from 'vue-router'
-import App from './App.vue'
-import Vuetify from 'vuetify'
+
+import Router from 'vue-router' 
 Vue.use(Router)
 import router from './routes'
-import VueRouter from 'vue-router'
+
+import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.css'
-import Vuex from 'vuex'
-
-
 Vue.use(Vuetify) 
+
+import Vuex from 'vuex'
 Vue.use(Vuex)
+import store from './stores/store.js'
 
-const store = new Vuex.Store({
-  state: {
-    menu: {},
-    logged: (!(JSON.parse(localStorage.getItem('user'))))?true:false
-  
-  },
-  mutations: {
-    setMenu: function(state, u){
-      state.menu = u;
-    },
-    logged(state, l){
-      state.logged = l;
-    }
-    
-  },
-  getters: {
-
-    getMenu : function(state){
-      const auser = JSON.parse(localStorage.getItem('user'));
-            
-        if(!auser) {
-            state.logged = false;
-            return [   
-                {icon:"home", title:"principale", link:"/" },
-                {icon:"person", title:"Connexion", link:"/login" }
-            ]
-        }else{
-            state.logged = true;
-            return auser.menu;
-        }
-    },
-    getLogged(state){
-      return state.logged;
-    }
-
-  }
-})
+import App from './App.vue'
 
 new Vue({
 

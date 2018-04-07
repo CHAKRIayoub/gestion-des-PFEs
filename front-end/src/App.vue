@@ -6,11 +6,11 @@
       <v-spacer></v-spacer>
       <v-toolbar-items class="hidden-xs-only">
 
-        <v-btn flat v-for="item in authUser.menu" :key="item.title" router :to="item.link" >
+        <v-btn flat v-for="item in menus" :key="item.title" router :to="item.link" >
           <v-icon left>{{ item.icon }}</v-icon> {{ item.title }}
         </v-btn>
 
-        <v-btn v-show="logged" @click="logout" flat>
+        <v-btn v-show="logged"  @click="logout" flat>
           <v-icon left >person</v-icon> Deconnexion
         </v-btn>
 
@@ -20,7 +20,7 @@
     <v-navigation-drawer temporary v-model="sidenav" fixed app >
       <v-list dense>
 
-        <v-list-tile v-for="item in authUser.menu" :key="item.title" router :to="item.link" >
+        <v-list-tile v-for="item in menus" :key="item.title" :to="item.link" >
           <v-list-tile-action>
             <v-icon>{{ item.icon }}</v-icon>
           </v-list-tile-action>
@@ -46,26 +46,33 @@ export default {
   data () {
     return {
       sidenav: false,
+      menu:[]
     }
   }, 
   methods:{
     logout: function () {
-        localStorage.removeItem('user');
-        this.$store.commit('setMenu',[]);
+        
+        this.$store.commit('logout');
         this.$router.push('/login');
     }
-
   },
   mounted() {
      
   },
   computed: {
+
     logged(){
-        return this.$store.getters.getLogged;
+        return this.$store.getters.logged;
     },
+
+    menus(){
+        return this.$store.getters.menu;
+    },
+
     authUser(){
-        return this.$store.getters.getMenu;
+        return JSON.parse(localStorage.getItem('user'))
     }
+
   },
 
 }

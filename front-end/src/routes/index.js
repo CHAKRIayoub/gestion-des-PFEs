@@ -1,12 +1,12 @@
+
 import Vue from 'vue'
 import Router from 'vue-router'
+Vue.use(Router)
+
 import home from '../components/home'
 import student from '../components/student'
 import professor from '../components/professor'
 import login from '../components/auth/login'
-
-
-Vue.use(Router)
 
 export default new Router({
   routes: [
@@ -22,8 +22,7 @@ export default new Router({
         name: 'login',
         component: login,
         beforeEnter: (to, from, next) => {
-            const authUser = JSON.parse(localStorage.getItem('user'))
-            if(authUser) {
+            if(! localStorage.getItem('logged')=="false") {
               next('/');
             }else next();
         }
@@ -34,9 +33,9 @@ export default new Router({
         name: 'student',
         component: student,
         beforeEnter: (to, from, next) => {
-            const authUser = JSON.parse(localStorage.getItem('user'));
-            if(!authUser) {
-              next({name:'login'})
+            const user = JSON.parse(localStorage.getItem('user'));
+            if((user.role == "professor")) {
+              next('/professor')
             }else next();
         }
     },
@@ -46,11 +45,10 @@ export default new Router({
         name: 'professor',
         component: professor,
         beforeEnter: (to, from, next) => {
-            const authUser = JSON.parse(localStorage.getItem('user'));
-            if(!authUser) {
-              next({name:'login'})
-            }else
-                next();
+            const user = JSON.parse(localStorage.getItem('user'));
+            if((user.role == "etudiant")) {
+              next('/student')
+            }else next();
         }
     },
   ],

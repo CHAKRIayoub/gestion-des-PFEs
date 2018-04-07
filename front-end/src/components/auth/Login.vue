@@ -81,12 +81,31 @@ export default {
             email: this.email,
           }).then((response) => {
             var user = response.data;
+            var menu = []
             if(user){
+                var id_menu = (user.role == "professor")?1:2;
+                var to = (id_menu==1)?"/student":"/professor"
 
-                this.$store.commit('setMenu',  user.menu);
-                this.$store.commit('logged',  true);
-                localStorage.setItem('user', JSON.stringify(response.data) )
-                this.$router.push('/professor');
+                axios.get('http://localhost:9000/api/menu/'+id_menu).then((res) => {
+                    menu = res.data
+                    var menu_str = "["
+                    menu.forEach(item => {
+                        menu_str += JSON.stringify(item) +",";
+                    });
+                    menu_str = menu_str.slice(0, -1)
+                    menu_str += "]"
+
+                    // var jsn =  JSON.parse(menu_str);
+                    // console.log(jsn[0])
+
+                    this.$store.commit('setUser',user)
+                    this.$store.commit('setMenu',menu_str)
+                    this.$router.push(to)
+
+                })
+
+                
+
               
             }else{
               this.alert = true;
