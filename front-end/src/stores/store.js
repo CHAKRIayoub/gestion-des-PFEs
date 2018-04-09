@@ -15,6 +15,7 @@ export default new Vuex.Store({
     mutations:{
 
         setUser(state, user){
+            
             localStorage.setItem('user', JSON.stringify(user) )
             localStorage.setItem('logged', "true" )
             state.user = user
@@ -50,6 +51,9 @@ export default new Vuex.Store({
         logged(state){
             return state.logged;
             // return JSON.parse(localStorage.getItem('menu'));
+        },
+        authUser(state){
+            return state.user;
         }
 
 

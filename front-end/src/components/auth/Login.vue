@@ -102,7 +102,7 @@ export default {
                     this.$store.commit('setMenu',menu_str)
                     this.$router.push(to)
 
-                })
+                }) 
 
                 
 

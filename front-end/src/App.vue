@@ -14,6 +14,10 @@
           <v-icon left >person</v-icon> Deconnexion
         </v-btn>
 
+         <v-btn v-show="!logged"  to="/login" flat>
+          <v-icon left >person</v-icon> Connexion
+        </v-btn>
+
       </v-toolbar-items>
       
     </v-toolbar>

@@ -6,13 +6,9 @@ module.exports = {
         
         User.findOne( req.body  ,(err, user) => {
 
-            // console.log(req.body);
-
             if (err)
                   res.send(err);
             res.json(user);
-
-            
 
         });
 
@@ -72,6 +68,9 @@ module.exports = {
                 res.send(err);
             user.nom = req.body.nom;  
             user.prenom = req.body.prenom;  
+            user.password = req.body.password;  
+            user.email = req.body.email; 
+            user.role = req.body.role;
 
             user.save((err) => {
 

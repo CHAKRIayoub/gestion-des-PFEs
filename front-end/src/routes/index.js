@@ -3,19 +3,24 @@ import Vue from 'vue'
 import Router from 'vue-router'
 Vue.use(Router)
 
+//general compo
 import home from '../components/home'
-import student from '../components/student'
-import professor from '../components/professor'
 import login from '../components/auth/login'
 
+//student compo
+import student from '../components/student'
+
+//professor compo
+import professor from '../components/professor'
+import profSujetIndex from '../components/prof/sujet/indexSujet'
+import addSujetIndex from '../components/prof/sujet/addSujet'
+
+//router
 export default new Router({
   routes: [
-    {
-        path: '/',
-        name: 'home',
-        component: home,
-
-    },
+    {path: '/sujets', name: 'profSujetIndex', component: profSujetIndex},
+    {path: '/sujets/add/', name: 'addSujet', component: addSujetIndex},
+    {path: '/',name: 'home',component: home},
     
     {
         path: '/login',

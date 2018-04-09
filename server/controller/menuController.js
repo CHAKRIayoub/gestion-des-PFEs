@@ -3,8 +3,6 @@ var Menu     = require('../models/menu');
 module.exports = {
 
     index: (req, res) => {
-
-        // console.log(req.params);
         
         Menu.find( {'id' : req.params.id}  ,(err, menu) => {
 
