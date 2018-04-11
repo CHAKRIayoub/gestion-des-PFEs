@@ -14,12 +14,14 @@ import student from '../components/student'
 import professor from '../components/professor'
 import profSujetIndex from '../components/prof/sujet/indexSujet'
 import addSujetIndex from '../components/prof/sujet/addSujet'
+import editSujetIndex from '../components/prof/sujet/editSujet'
 
 //router
 export default new Router({
   routes: [
     {path: '/sujets', name: 'profSujetIndex', component: profSujetIndex},
     {path: '/sujets/add/', name: 'addSujet', component: addSujetIndex},
+    {path: '/sujets/edit/:idSujet', name: 'editSujet', component: editSujetIndex},
     {path: '/',name: 'home',component: home},
     
     {

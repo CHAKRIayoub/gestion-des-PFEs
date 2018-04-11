@@ -56,7 +56,7 @@
 
              <v-btn
             @click="submit"
-            :disabled="!valid"
+            :disabled="!validsend"
             color="success"
             >
             Ajouter
@@ -69,24 +69,22 @@
 
       </v-flex>
     </v-layout>
-    <v-dialog v-model="dialog" max-width="290">
-      <v-card dark color="success" >
-        <v-card-title class="headline">
-             
+    <v-dialog v-model="dialog" max-width="350">
+      <v-card   >
+        <v-card-title class="headline" style="color: green;" >
+            
+                     <v-icon size="40px" color="success" >check_circle</v-icon>{{ mMessage.title }}
+               
              <!-- {{ mMessage.title }} -->
         </v-card-title>
         <v-card-text>
-            <p class="text-md-left">
-                <h1>
-                     {{ mMessage.title }}<v-icon color="white">check_circle</v-icon>
-                </h1>
-             {{ mMessage.body }}
-                      <v-divider light   ></v-divider>
-            </p>  
+            <v-flex style="background:#4caf50; width:100% " >
+                
+            </v-flex>  
         </v-card-text>  
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn dark  flat="flat" @click.native="redirecto()">ok</v-btn>
+          <v-btn   flat="flat" @click.native="redirecto()">ok</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -126,13 +124,15 @@ export default {
     },
     computed: {
         validsend(){
-            if (this.$refs.form.validate() && this.selectedFiliere._id) {
-                this.valid = true
+            
+            if (this.valid && this.selectedFiliere._id !== "" 
+                && this.selectedFiliere._id !== null 
+                && typeof(this.selectedFiliere._id) !== 'undefined')
+                
                 return true
-            }else{
-                this.valid = false
-                return false
-            } 
+            
+            else return false
+            
         }
     },
 
@@ -147,7 +147,7 @@ export default {
         },
 
         redirecto(){
-            this.$router.push('/sujets')
+            this.$router.push('/sujets') 
         },
 
         submit () {
@@ -161,7 +161,6 @@ export default {
                 }).then((response)=>{
                     this.mMessage.title = 'Sujet Ajouté Avec Succée'
                     this.dialog = true
-                    
                 }).catch((error)=>{
                     console.log('no')
                 })

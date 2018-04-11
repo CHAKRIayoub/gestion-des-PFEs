@@ -36,10 +36,13 @@ router.route('/users/:id*?')
 
 
     router.route('/sujets/:id*?')
-        .post(function(req, res) {sujetController.create(req, res);})
-        .get((req, res) => {sujetController.index(req, res);})
-        .put(function(req, res) {sujetController.put(req, res);})
-        .delete(function(req, res) {sujetController.delete(req, res);});
+        .post(function(req, res) {sujetController.create(req, res)})
+        .get((req, res) => {sujetController.index(req, res)})
+        .put(function(req, res) {sujetController.put(req, res)})
+        .delete(function(req, res) {sujetController.delete(req, res)});
+    
+    router.route('/sujet/:id*')
+        .get((req, res)=>{ sujetController.getSujet(req, res) });
 
 //______________________________________________________________________________________________
 //----------------------------------Student API----------------------------------------------------

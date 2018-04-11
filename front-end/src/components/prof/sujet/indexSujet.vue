@@ -4,13 +4,13 @@
             <h1  >Liste des Sujets </h1><br>
         </v-flex>
         
-        <v-spacer></v-spacer>
+        <v-spacer></v-spacer> 
                         
 		<v-btn color="success" dark to="/sujets/add" ><v-icon>add</v-icon> Ajouter Un Sujet </v-btn>
 
 
       <br><br>
-     <v-card>
+     <v-card >
     <v-card-title> 
     	<v-spacer></v-spacer>
         <v-text-field
@@ -32,13 +32,18 @@
 		<template slot="items" slot-scope="props">
 			<td class="text-xs-left">{{ props.item.titre }}</td>
 			<td class="text-xs-left">{{ props.item.description }}</td>
-			<td class="text-xs-left">{{ props.item.technologies }}</td>
+			<!-- <td class="text-xs-left">{{ props.item.technologies }}</td> -->
+      <td>
+        <v-chip v-for="tech in props.item.technologies" :key="tech" v-bind:class="randomColor" >
+          {{ tech }}
+        </v-chip>
+      </td>
 			<td class="text-xs-left">{{ getF(props.item.filiere_id) }}</td>
 			<td class="justify-center layout px-0">
 			<v-btn  icon class="mx-0" @click="editItem(props.item)">
 				<v-icon color="primary">edit</v-icon>
 			</v-btn>
-			<v-btn  icon  class="mx-0" @click="deleteItem(props.item)">
+			<v-btn  icon  class="mx-0" @click="showconfirmDel(props.item)">
 				<v-icon color="error">delete</v-icon>
 			</v-btn>
 			</td>
@@ -56,8 +61,30 @@
             
         </v-data-table>
      </v-card>
-  </div>
 
+     <v-dialog v-model="delalert"  max-width="350">
+      <v-card   >
+        <v-card-title class="headline" style="color: red;" >
+            
+                     <v-icon size="40px" color="error" >delete</v-icon>{{ mMessage.title }}
+               
+             <!-- {{ mMessage.title }} -->
+        </v-card-title>
+        <v-card-text>
+            <v-flex style="background:#4caf50; width:100% " >
+                
+            </v-flex>  
+        </v-card-text>  
+        <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <v-btn   flat="flat" @click.native="delalert=false">annuler</v-btn>
+          <v-btn   flat="flat" @click.native="deleteItem=!deleteItem">supprimer</v-btn>
+
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </div>
 
 </template>
 
@@ -67,7 +94,11 @@ import axios from 'axios';
 export default {
 
     data: () => ({
-	  str: '',
+      colors:['light-blue', 'teal', 'blue', 'indigo', 'lime', 'green', 'light-green', 'amber', 'orange', 'deep-orange'],
+      deleteItem: true,
+      mMessage: {title: '', body:''},
+      delalert: false,
+	    str: '',
       search: '',
       dialog: false,
       headers: [
@@ -83,13 +114,8 @@ export default {
       ],
       items: [],
       editedIndex: -1,
-      editedItem: {
-        titre: '',
-        description: '',
-        technologies: '',
-        filiere: '',
-      },
-      defaultItem: {
+      delItem: {
+        _id: '',
         titre: '',
         description: '',
         technologies: '',
@@ -97,8 +123,25 @@ export default {
       }
     }),
 
+    watch:{ 
+      deleteItem(query){
+          
+          axios.delete('http://localhost:9000/api/sujets/'+ this.delItem._id ).then((res)=>{
+              console.log(res)
+          }).catch((error)=>{
+              console.log(error)
+          })
+
+          const index = this.items.indexOf(this.delItem )
+          this.items.splice(index, 1)  
+          this.delalert = false;
+      }
+    },
+
     computed: {
-     
+     randomColor(){
+       return this.colors[Math.floor(Math.random() * this.colors.length)] 
+     }
     },
 
     created () {
@@ -109,7 +152,7 @@ export default {
 
       getF(id){
           axios.get('http://localhost:9000/api/filiere/'+id).then((res) => {
-			  this.str = res.data.libelle
+			      this.str = res.data.libelle
           })
 		  return this.str;
 
@@ -118,12 +161,16 @@ export default {
       initialize () {
         axios.get('http://localhost:9000/api/sujets/'+this.$store.getters.authUser._id).then((res) => {
             this.items = res.data;
+            this.items.forEach(element => {
+              element.technologies = element.technologies.split(',')
+            });
         });
       },
 
-      deleteItem (item) {
-        const index = this.items.indexOf(item)
-        confirm('Are you sure you want to delete this item?') && this.items.splice(index, 1)
+      showconfirmDel(item){
+          this.mMessage.title = "voulez vous vraiment supprimer ce Sujet ?"
+          this.delalert = true
+          this.delItem = item
       },
 
 	  editItem (item) {
