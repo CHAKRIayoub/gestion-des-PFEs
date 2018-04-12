@@ -3,6 +3,19 @@ var Filiere     = require('../models/filiere');
  
 module.exports = {
 
+    getSujetByFiliere: (req , res) => {
+
+        Sujet.find({filiere_id: req.params.id} ,(err, sujets) => {
+
+            if (err)
+                res.send(err);
+        
+            res.json(sujets);
+
+        });
+      
+    },
+
     getSujet: (req, res) => {
 
         Sujet.findOne({_id: req.params.id} ,(err, sujet) => {

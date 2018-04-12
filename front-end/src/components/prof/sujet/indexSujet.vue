@@ -34,7 +34,7 @@
 			<td class="text-xs-left">{{ props.item.description }}</td>
 			<!-- <td class="text-xs-left">{{ props.item.technologies }}</td> -->
       <td>
-        <v-chip v-for="tech in props.item.technologies" :key="tech" v-bind:class="randomColor" >
+        <v-chip  text-color="white" v-for="tech in props.item.technologies" :key="tech" v-bind:class="randomColor" >
           {{ tech }}
         </v-chip>
       </td>

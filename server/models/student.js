@@ -3,8 +3,8 @@ var mongoose = require('../database/db');
 var Schema = mongoose.Schema;
 
 var studentSchema = new Schema({
-    CNI: String, 
-    CNE: Number,
+    cni: String, 
+    cne: Number,
     filiere_id: String,
     user_id: String
 });

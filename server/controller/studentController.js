@@ -2,6 +2,19 @@ var Student     = require('../models/student');
 
 module.exports = {
 
+    getStudent: (req, res) => {
+
+        Student.findOne({user_id: req.params.id} ,(err, student) => {
+
+            if (err)
+                res.send(err);
+        
+            res.json(student);
+
+        });
+
+    },
+
     create: (req , res) => {
 
         var student = new Student();      
@@ -10,12 +23,12 @@ module.exports = {
         student.filiere_id = req.body.filiere_id 
         student.user_id = req.body.user_id
 
-        user.save((err) => {
+        student.save((err) => {
 
             if (err){ 
                 res.send(err);
             }
-            res.json({ message: 'user created!' })
+            res.json({ message: 'student created!' })
                 
         });
 
