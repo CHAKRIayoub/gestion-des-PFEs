@@ -35,8 +35,11 @@ import professor from '../components/professor'
 
     //gestion des sujets___________________________________________
     import profSujetIndex from '../components/prof/sujet/indexSujet'
-    import addSujetIndex from '../components/prof/sujet/addSujet'
-    import editSujetIndex from '../components/prof/sujet/editSujet'
+    import addSujet from '../components/prof/sujet/addSujet'
+    import editSujet from '../components/prof/sujet/editSujet'
+    import showSujet from '../components/prof/sujet/showSujet'
+    import attrSujet from '../components/prof/sujet/attrSujet'
+
 
     //validation des sujets_________________________________________
 
@@ -59,7 +62,7 @@ export default new Router({
 //-----------------------------------------------------------------
 //general compo----------------------------------------------------
 
-    {path: '/',      name: 'home', component: home},
+    {path: '/home',      name: 'home', component: home},
 
     {path: '/login', name: 'login',component: login,
         beforeEnter: (to, from, next) => {
@@ -104,8 +107,11 @@ export default new Router({
     //gestion des sujets___________________________________________
 
         {path: '/sujets', name: 'profSujetIndex', component: profSujetIndex},
-        {path: '/sujets/add/', name: 'addSujet', component: addSujetIndex},
-        {path: '/sujets/edit/:idSujet', name: 'editSujet', component: editSujetIndex},
+        {path: '/sujets/add/', name: 'addSujet', component: addSujet},
+        {path: '/sujets/edit/:idSujet', name: 'editSujet', component: editSujet},
+        {path: '/sujets/show/:idSujet', name: 'showSujet', component: showSujet},
+        {path: '/sujets/attr/:idSujet', name: 'attrSujet', component: attrSujet},
+
 
     //validation des sujets________________________________________
     //suivi d'etat_________________________________________________

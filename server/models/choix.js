@@ -2,11 +2,11 @@ var mongoose = require('../database/db');
 
 var Schema = mongoose.Schema;
 
-var projetSchema = new Schema({
+var choixSchema = new Schema({
     student_id: String,
     sujet_id: String, 
-
+    order: Number
 });
 
-var Projet = mongoose.model("Projet", projetSchema);
-module.exports = Projet;
+var Choix = mongoose.model("Choix", choixSchema);
+module.exports = Choix;

@@ -14,6 +14,18 @@ module.exports = {
 
     },
 
+    getUser: (req, res) => {
+        
+        User.findOne( {_id: req.params.id}  ,(err, user) => {
+
+            if (err)
+                  res.send(err);
+            res.json(user);
+
+        });
+
+    },
+
     create: (req , res) => {
 
         var user = new User();      

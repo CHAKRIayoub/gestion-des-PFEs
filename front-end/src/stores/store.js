@@ -8,11 +8,16 @@ export default new Vuex.Store({
 
         menu: JSON.parse(localStorage.getItem('menu')) || [],
         user: JSON.parse(localStorage.getItem('user')) || {},
-        logged: (localStorage.getItem('logged')=="false")?false:true 
+        logged: (localStorage.getItem('logged')=="false")?false:true ,
+        attrUser:''
 
     },
 
     mutations:{
+
+        setAttrUser(state, usr){
+            state.attrUser = usr
+        },
 
         setUser(state, user){
             
@@ -44,6 +49,10 @@ export default new Vuex.Store({
 
     getters: {
 
+        getAttrUser(state){
+            return state.attrUser;
+        },
+
         menu(state){
             return state.menu;
         },
@@ -52,6 +61,7 @@ export default new Vuex.Store({
             return state.logged;
             // return JSON.parse(localStorage.getItem('menu'));
         },
+
         authUser(state){
             return state.user;
         }

@@ -25,7 +25,7 @@
             ></v-text-field><br><br>
 
             <v-select
-            v-model="selectedTech"
+            v-model="jury"
             label="Technologies"
             :rules="[v => !!v || 'item required']"
             chips

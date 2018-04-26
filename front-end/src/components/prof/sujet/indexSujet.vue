@@ -1,7 +1,7 @@
 <template>
     <div style="margin-top:50px" >
         <v-flex md5 offset-md5 sm5 offset-sm5 xs12  >
-            <h1  >Liste des Sujets </h1><br>
+            <h1>Liste des Sujets </h1><br>
         </v-flex>
         
         <v-spacer></v-spacer> 
@@ -46,24 +46,30 @@
 			<v-btn  icon  class="mx-0" @click="showconfirmDel(props.item)">
 				<v-icon color="error">delete</v-icon>
 			</v-btn>
+      <v-btn  icon  class="mx-0" @click="showSujet(props.item._id)" >
+				<v-icon color="success">group</v-icon>
+			</v-btn>
 			</td>
 		</template>
 
 		<template slot="no-data">
-			<v-alert :value="true" color="error" icon="warning">
-				Sorry, nothing to display here :(
-			</v-alert>
+      <v-flex offset-md6>
+				<v-icon>fas fa-spinner fa-spin</v-icon>
+      </v-flex>
 		</template>
 
 		<v-alert slot="no-results" :value="true" color="error" icon="warning">
 			Your search for "{{ search }}" found no results.
 		</v-alert>
             
-        </v-data-table>
-     </v-card>
+  </v-data-table>
+</v-card>
+
+
+
 
      <v-dialog v-model="delalert"  max-width="350">
-      <v-card   >
+      <v-card>
         <v-card-title class="headline" style="color: red;" >
             
                      <v-icon size="40px" color="error" >delete</v-icon>{{ mMessage.title }}
@@ -94,6 +100,7 @@ import axios from 'axios';
 export default {
 
     data: () => ({
+      chargement: true,
       colors:['light-blue', 'teal', 'blue', 'indigo', 'lime', 'green', 'light-green', 'amber', 'orange', 'deep-orange'],
       deleteItem: true,
       mMessage: {title: '', body:''},
@@ -102,11 +109,7 @@ export default {
       search: '',
       dialog: false,
       headers: [
-        {
-          text: 'Titre',
-          sortable: false,
-          value: 'titre'
-        },
+        {text: 'Titre', sortable: false, value: 'titre'},
         { text: 'Description', value: 'description' },
         { text: 'Technologies', value: 'technologies' },
         { text: 'Filiere', value: 'filiere' },
@@ -124,6 +127,7 @@ export default {
     }),
 
     watch:{ 
+      
       deleteItem(query){
           
           axios.delete('http://localhost:9000/api/sujets/'+ this.delItem._id ).then((res)=>{
@@ -150,11 +154,15 @@ export default {
 
     methods: {
 
+      showSujet(id){
+        this.$router.push('sujets/show/'+id);
+      },
+
       getF(id){
           axios.get('http://localhost:9000/api/filiere/'+id).then((res) => {
 			      this.str = res.data.libelle
           })
-		  return this.str;
+		      return this.str;
 
       },
        

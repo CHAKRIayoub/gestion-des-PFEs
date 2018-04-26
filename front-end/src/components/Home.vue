@@ -7,7 +7,8 @@
           <h3 class="display-3"> Principale  </h3>
           <span class="subheading">bonjour maison debarque maroc pour tetouan master il faut id. Vis maluisset molestiae id, ad semper lobortis cum. At impetus detraxit incorrupte usu, repudiare assueverit ex eum, ne nam essent vocent admodum.</span>
           <v-divider class="my-3"></v-divider>
-          <div class="title mb-3">Principale</div>
+          <div class="title mb-3">Principale</div><br>
+            <embed src="public/rp.pdf" width="100%" /><br>
           <v-btn large color="primary" class="mx-0">Principale</v-btn>
         </v-flex>
       </v-layout>

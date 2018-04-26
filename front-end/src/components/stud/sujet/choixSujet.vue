@@ -1,23 +1,10 @@
 <template>
-  <div style="margin-top:50px" >
-    <v-flex md5 sm5 xs12  >
-      <h2>votre choix:</h2><br>
-    </v-flex>
-
-    <v-flex  xl12 lg12 md12 sm12 xs12 v-for="sjt in selectedItemscomp" :key="sjt._id">
-      <v-card dark color="success">
-        <v-card-text>{{sjt.titre}}</v-card-text>
-      </v-card><br>
-    </v-flex>
-
-    
   
-    <br><br>
-    <v-flex md5 sm5 xs12  >
-      <h2>veuillez selectioner 3 sujet parmi la liste suivant :</h2><br>
-    </v-flex>
-    <v-card >
+  <div style="margin-top:50px" >
+    
+    <v-card class="transparent" >
       <v-card-title> 
+        <h2>selectionez 3 sujet parmi ces sujets :</h2>
     	  <v-spacer></v-spacer>
           <v-text-field
           append-icon="search"
@@ -27,52 +14,67 @@
           v-model="search"
           ></v-text-field>
       </v-card-title>
+      <v-layout v-for="sujet in sujets" :key="sujet._id"><br>
+        <v-flex offset-md1 offset-xs1 offset-sm1 offset-lg1 xs10 sm10 md10 lg10 xl10><br>
+          
+          <v-card v-bind:class="{'green accent-3' : sujet.selected, 'white' : !sujet.selected }" > 
+            <v-card-title primary-title>
+              <v-flex md5 >
+                <h3 class="headline mb-0">{{ sujet.titre }}</h3><br>
+                <p>{{ sujet.description }}</p>
+              </v-flex>
+              <v-flex offset-md1 md5>
+                Technologies : <br>
+                <v-chip  text-color="white" v-for="tech in sujet.techs" :key="tech" v-bind:class="randomColor" >
+                  {{ tech }}
+                </v-chip>
+              </v-flex> 
+            </v-card-title>
+            <v-divider></v-divider>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn v-bind:class="{'success' : sujet.selected}" @click="addSelcted(sujet)">
+                <v-icon>check_circle</v-icon>Selectionner
+              </v-btn>           
+            </v-card-actions>
+          </v-card>
+        </v-flex>
+      </v-layout><br>
+    </v-card><br><br>   
 
-      <v-data-table 
-      :headers="headers"
-      :items="items"
-      :search="search"
-      hide-actions
-      class="elevation-1">
-		    <template slot="items" slot-scope="props">
-          <td class="text-xs-left">{{ props.item.titre }}</td>
-          <td class="text-xs-left">{{ props.item.description }}</td>
-          <!-- <td class="text-xs-left">{{ props.item.technologies }}</td> -->
-          <td>
-            <v-chip  text-color="white" v-for="tech in props.item.technologies" :key="tech" v-bind:class="randomColor" >
-              {{ tech }}
-            </v-chip>
-          </td>
-          <td class="text-xs-left">{{ getF(props.item.filiere_id) }}</td>
-          <td>
-            <v-btn @click="addSelcted(props.item)">
-              <v-icon>check_circle</v-icon>Selectionner
-            </v-btn>
-           
-          </td>
-		    </template>
-        <template slot="no-data">
-          <v-alert :value="true" color="error" icon="warning">
-            Sorry, nothing to display here :(
-          </v-alert>
-        </template>
-        <v-alert slot="no-results" :value="true" color="error" icon="warning">
-          Your search for "{{ search }}" found no results.
-        </v-alert>
-      </v-data-table>
+      <v-card pa-2 >
+      <v-card-title> 
+        <v-flex md5 sm5 xs12  >
+          <h2>votre choix:</h2><br>
+        </v-flex>
+      </v-card-title>
+      
+      <v-flex ma-3  xl12 lg12 md12 sm12 xs12 v-for="sjt in selectedItemscomp" :key="sjt._id">
+        <v-alert @input="delSelected(sjt)" dismissible  color="success" icon="check_circle" :value="true">
+          {{sjt.titre}} 
+        </v-alert> 
+      </v-flex>
+      <br> <br>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn @click="send_choix" color="info" :disabled="!send_choix_btn" >
+          <v-icon>send</v-icon>Ennvoyer les choix
+        </v-btn>           
+      </v-card-actions>
     </v-card>
-    <v-dialog v-model="delalert"  max-width="350">
+
+      
+    <v-dialog v-model="alert"  max-width="350">
       <v-card>
-        <v-card-title class="headline" style="color: red;" >
-          <v-icon size="40px" color="error" >delete</v-icon>{{ mMessage.title }}               
+        <v-card-title class="headline"  >
+          <v-icon size="40px" color="info" >help</v-icon>{{ mMessage.title }}               
         </v-card-title>
         <v-card-text>
-            <v-flex style="background:#4caf50; width:100% "></v-flex>  
+              
         </v-card-text>  
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn flat="flat" @click.native="delalert=false">annuler</v-btn>
-          <v-btn flat="flat" @click.native="deleteItem=!deleteItem">supprimer</v-btn>
+          <v-btn flat="flat" @click.native="hideAlert()">ok</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -87,56 +89,37 @@
 
     data: () => ({
 
-      colors:['light-blue', 'teal', 'blue', 'indigo', 'lime', 'green', 'light-green', 'amber', 'orange', 'deep-orange'],
-      deleteItem: true,
-      mMessage: {title: '', body:''},
-      delalert: false,
-	    str: '',
+      colors:['green darken-1','light-green darken-1','lime darken-1','teal darken-1','cyan darken-1','light-blue darken-1','blue darken-1','indigo darken-1','deep-purple darken-1','blue-grey darken-1','brown darken-1'],
+      
       search: '',
+      mMessage: {title: '', body:''},
       dialog: false,
-      headers: [
-        {text: 'Titre',value: 'titre'},
-        { text: 'Description', value: 'description' },
-        { text: 'Technologies', value: 'technologies' },
-        { text: 'Filiere', value: 'filiere' },
-        { text: 'Actions', value: 'name', sortable: false }
-      ],
+      alert: false,
+
       items: [],
       selectedItems: [],
-      editedIndex: -1,
-      delItem: {
-        _id: '',
-        titre: '',
-        description: '',
-        technologies: '',
-        filiere: '',
-      },
-
+      allitems: []
+      
     }),
 
     watch:{ 
-
-      selectedItems(query){
-
-      },
-      
-      deleteItem(query){
-          
-        axios.delete('http://localhost:9000/api/sujets/'+ this.delItem._id ).then((res)=>{
-          console.log(res)
-        }).catch((error)=>{
-          console.log(error)
-        })
-
-        const index = this.items.indexOf(this.delItem )
-        this.items.splice(index, 1)  
-        this.delalert = false;
-
-      }
-    
+     
     },
 
     computed: {
+
+      send_choix_btn(){
+
+        if(this.selectedItems.length < 3 ) return false
+        else return true
+
+      },
+
+      selectedItemscomp(){
+
+        return this.selectedItems
+
+      },
 
       randomColor(){
 
@@ -144,9 +127,16 @@
       
       },
 
-      selectedItemscomp(){
+      sujets(){
 
-        return this.selectedItems
+          var self = this
+          return this.allitems.filter(function(sujet){
+            return (sujet.titre.toLowerCase().match(self.search.toLowerCase()) ||
+              sujet.description.toLowerCase().match(self.search.toLowerCase()) ||
+              sujet.technologies.toLowerCase().match(self.search.toLowerCase())
+            )
+              
+          })
 
       }
 
@@ -160,52 +150,100 @@
 
     methods: {
 
-      addSelcted(item){
-        if(this.selectedItems.length < 3 )
-        // this.selectedItems[this.selectedItems.length]=item
-        this.selectedItems.push(item);
-        else alert('vous avez depasser 3 choix')
+      send_choix(){
+
+        var schoices = []
+        this.selectedItems.forEach((element,index) => {
+          schoices.push(
+            {sujet_id:element._id, order:index+1 }
+          )
+        });
+
+        axios.post('http://localhost:9000/api/choix/'+this.$store.getters.authUser._id, {
+          choices: schoices
+        }).then((response)=>{
+          this.mMessage.title = 'votre choix est enregistrer avec succée'
+          this.alert = true
+        }).catch((error)=>{
+          this.mMessage.title = 'erreur'
+          this.alert = true 
+        })
+
+      },
+
+      hideAlert(){
+        this.alert=false 
+      },
+
+      delSelected(item){ 
+
+        this.selectedItems.splice(this.selectedItems.indexOf(item),1)
+        this.allitems.find(x => x._id === item._id).selected = false
         
       },
 
-      getF(id){
+      addSelcted(item){
+        
+        if(this.selectedItems.includes(item)){  
 
-        axios.get('http://localhost:9000/api/filiere/'+id).then((res) => {
-          this.str = res.data.libelle
-        })
-		    return this.str;
- 
+          this.selectedItems.splice(this.selectedItems.indexOf(item),1)
+          this.allitems.find(x => x._id === item._id).selected = false
+
+        }else{
+
+          if(this.selectedItems.length < 3 ){ 
+
+            item.i = this.selectedItems.length + 1
+            this.selectedItems.push(item);
+            this.allitems.find(x => x._id === item._id).selected = true
+
+          }
+          
+          else{
+            this.mMessage.title = 'vous avez depasser 3 choix'
+            this.alert=true
+          }
+        
+        }
+
       },
        
       initialize () {
+        var choixs = []
+        axios.get('http://localhost:9000/api/choix/'+this.$store.getters.authUser._id).then((res) => {
+
+          choixs = res.data
+         
+        });
         
         axios.get('http://localhost:9000/api/student/'+this.$store.getters.authUser._id).then((res) => {
           axios.get('http://localhost:9000/api/sujetbyf/'+res.data.filiere_id).then((resp) => {
-            this.items = resp.data;
-            this.items.forEach(element => {
-              element.technologies = element.technologies.split(',')
+            
+            resp.data.forEach(element=>{
+              element.selected = false
+            })
+
+            resp.data.forEach(element => {
+              
+              choixs.forEach(item=>{
+                if(item.sujet_id === element._id){
+                  element.selected = true
+                  this.selectedItems.push(element)
+                }
+                  
+              })
+              element.techs = element.technologies.split(',')
             });
+            this.allitems = this.items = resp.data;
+                        console.log(this.allitems)
+
           });
         });
 
-        this.Selected = []
-    
-      },
-
-      showconfirmDel(item){
-      
-        this.mMessage.title = "voulez vous vraiment supprimer ce Sujet ?"
-        this.delalert = true
-        this.delItem = item
-    
-      },
-
-	    editItem (item) {
-        
-        this.$router.push('sujets/edit/'+item._id);
-      
+       
+            
       }
-    
+      
     }
   
   }

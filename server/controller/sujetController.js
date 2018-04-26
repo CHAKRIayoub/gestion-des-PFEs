@@ -5,7 +5,7 @@ module.exports = {
 
     getSujetByFiliere: (req , res) => {
 
-        Sujet.find({filiere_id: req.params.id} ,(err, sujets) => {
+        Sujet.find({filiere_id: req.params.id, student_id: null} ,(err, sujets) => {
 
             if (err)
                 res.send(err);
@@ -52,12 +52,13 @@ module.exports = {
 
     index: (req , res) => {
 
-        Sujet.find({professor_id: req.params.id} ,(err, sujets) => {
+        Sujet.find({professor_id: req.params.id, student_id: null} ,(err, sujets) => {
 
             if (err)
                 res.send(err);
-        
+
             res.json(sujets);
+            
 
         });
       
@@ -83,11 +84,12 @@ module.exports = {
 
             if (err)
                 res.send(err);
+            
             sujet.titre = req.body.titre
             sujet.description = req.body.description
             sujet.technologies = req.body.technologies
             sujet.filiere_id = req.body.filiere_id  
-
+            
             sujet.save((err) => {
 
                 if (err)
@@ -95,8 +97,29 @@ module.exports = {
                 res.json({ message: 'sujet updated!' });
 
             });
+
         });
       
+    },
+
+    addStudent(req , res){
+
+        Sujet.findById(req.params.id, (err, sujet) => {
+
+            if (err)
+                res.send(err);
+            sujet.student_id = req.body.student_id
+            
+            sujet.save((err) => {
+
+                if (err)
+                    res.send(err);
+                res.json({ message: 'sujet updated!' });
+
+            });
+
+        });
+
     }
 
 };

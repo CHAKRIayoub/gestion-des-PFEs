@@ -1,5 +1,6 @@
 <template>
   <v-app>
+    <v-dialog v-model="chargement" ></v-dialog>
     <v-toolbar dark class="blue darken-1" >
       <v-toolbar-side-icon @click.native.stop="sidenav = !sidenav" class="hidden-sm-and-up"></v-toolbar-side-icon>
       <v-toolbar-title> PFEs </v-toolbar-title>
@@ -11,11 +12,11 @@
         </v-btn>
 
         <v-btn v-show="logged"  @click="logout" flat>
-          <v-icon left >person</v-icon> Deconnexion
+          <v-icon left >fas fa-sign-out-alt</v-icon> Deconnexion
         </v-btn>
 
          <v-btn v-show="!logged"  to="/login" flat>
-          <v-icon left >person</v-icon> Connexion
+          <v-icon left >fas fa-sign-in-alt</v-icon> Connexion
         </v-btn>
 
       </v-toolbar-items>
@@ -35,6 +36,28 @@
           </v-list-tile-content>
         </v-list-tile>
 
+        <v-list-tile to="/login"  v-show="!logged"  >
+          <v-list-tile-action>
+            <v-icon>fas fa-sign-in-alt</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>
+              Connexion
+            </v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+
+        <v-list-tile @click="logout"  v-show="logged"  >
+          <v-list-tile-action>
+            <v-icon>fas fa-sign-out-alt</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>
+              Deconnexion
+            </v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+
       </v-list>       
     </v-navigation-drawer>
     <v-content>
@@ -49,6 +72,7 @@
 export default {
   data () {
     return {
+      chargement:true,
       sidenav: false,
       menu:[]
     }
@@ -61,6 +85,8 @@ export default {
     }
   },
   mounted() {
+
+    this.chargement = false
      
   },
   computed: {
