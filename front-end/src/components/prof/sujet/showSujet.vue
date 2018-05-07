@@ -61,7 +61,7 @@
                 <h2>Liste des Candidats </h2><br>
                 <v-spacer></v-spacer>
                 <v-text-field
-                    append-icon="search"
+                    append-icon="fas fa-search"
                     label="Search"
                     single-line
                     hide-details
@@ -72,23 +72,33 @@
             <v-data-table
                 :headers="headers"
                 :items="items"
-                :search="search"
-                hide-actions
+                :search="search"               
                 class="elevation-1"
+                item-key="_id"
             >
                 <template slot="items" slot-scope="props">
-                    <td class="text-xs-left">{{ props.item.name }}</td>
-                    <td class="text-xs-left">{{ props.item.cne }}</td>
-                    <td class="text-xs-left">{{ props.item.cni }}</td>
-                    <td class="text-xs-left">{{ props.item.mail }}</td>
                     
-                    
-                    <td class="justify-center layout px-0">
-                        <v-btn color="teal" dark @click="attribute(props.item._id)" >
-                            <v-icon >fas fa-handshake</v-icon>&nbsp; Attribuer
-                        </v-btn>
-                    </td>
+                    <tr @click="props.expanded = !props.expanded" >
+                        <td class="text-xs-left">{{ props.item.order }}</td>
+                        <td class="text-xs-left">{{ props.item.name }}</td>
+                        <td class="text-xs-left">{{ props.item.cne }}</td>
+                        <td class="text-xs-left">
+                            <v-btn color="teal" dark @click="attribute(props.item._id)" >
+                                <v-icon >fas fa-handshake</v-icon>&nbsp; Attribuer
+                            </v-btn>
+                        </td>
+                    </tr>
                 </template>
+
+                <template slot="expand" slot-scope="props">
+                    <v-card flat>
+                        <v-card-text>
+                            N° CIN : <b> {{ props.item.cni }} </b> <br>
+                            Email : <b> {{ props.item.mail }} </b> <br>
+                        </v-card-text>
+                    </v-card>
+                </template>
+
 
                 <template slot="no-data">
                     <v-flex offset-md6>
@@ -101,6 +111,7 @@
                 </v-alert>
 
             </v-data-table>
+            
         </v-card>
 
         <v-dialog v-model="modalert"  max-width="350">
@@ -127,11 +138,11 @@
     export default {
         
         data: ()=>({
+            pagination: {},
             headers: [
+                {text: 'N° Choix', value: 'order'},
                 {text: 'NOM', value: 'nom'},
                 {text: 'CNE', value: 'cne' },
-                {text: 'CNI', value: 'cni' },
-                {text: 'EMAIL', value: 'email' },
                 {text: 'Actions', value: 'name', sortable: false }
             ],
             search: '',
@@ -199,11 +210,12 @@
                     axios.get('http://localhost:9000/api/choixs/'+res.data._id).then((resp) => {
                         
                         var listChoix = resp.data
+                        var item = {}
                         listChoix.forEach(element => {
-                            
+
+                            item.order = element.order
                             axios.get('http://localhost:9000/api/student/'+element.student_id).then((respo) => {
                     
-                                var item = {}
                                 item.cne = respo.data.cne
                                 item.cni = respo.data.cni
                                 item._id = respo.data._id

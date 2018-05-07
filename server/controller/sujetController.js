@@ -1,7 +1,42 @@
 var Sujet     = require('../models/sujet');
 var Filiere     = require('../models/filiere');
+var Student     = require('../models/student');
  
 module.exports = {
+
+    getSujetByUser: (req, res) => {
+
+        Student.findOne({user_id: req.params.id} ,(err, student) => {
+
+            if (err)
+                res.send(err);
+
+            Sujet.findOne({student_id: student._id} ,(err, sujet) => {
+
+                if (err)
+                    res.send(err);
+            
+                res.json(sujet);
+    
+            });
+        
+        });
+
+    },
+
+    getAttSujet: (req, res) => {
+        
+        Sujet.find({professor_id: req.params.id, student_id: {$exists : true}} ,(err, sujets) => {
+
+            if (err)
+                res.send(err);
+
+            res.json(sujets);
+            
+
+        });
+
+    },
 
     getSujetByFiliere: (req , res) => {
 

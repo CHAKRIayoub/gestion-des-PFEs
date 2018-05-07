@@ -2,7 +2,9 @@
   <v-app>
     <v-dialog v-model="chargement" ></v-dialog>
     <v-toolbar dark class="blue darken-1" >
-      <v-toolbar-side-icon @click.native.stop="sidenav = !sidenav" class="hidden-sm-and-up"></v-toolbar-side-icon>
+      <v-toolbar-side-icon @click.native.stop="sidenav = !sidenav" class="hidden-sm-and-up">
+        <v-icon>fas fa-bars</v-icon>
+      </v-toolbar-side-icon>
       <v-toolbar-title> PFEs </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items class="hidden-xs-only">

@@ -55,6 +55,32 @@ module.exports = {
       
     },
 
+    deleteByStudent: (req, res) => {
+
+        Choix.find({student_id: req.params.id},(err, choixs) => {
+
+            if (err)
+                res.send(err);
+
+            choixs.forEach(element => {
+
+                Choix.remove({
+                    _id : element._id
+                }, (err, choix) => {
+        
+                    if (err)
+                        res.send(err);
+                        
+                });
+                
+            });
+
+            res.json({ message: 'Successfully deleted' });
+
+        });
+
+    },
+
     delete:  (req , res) => {
 
         Choix.remove({

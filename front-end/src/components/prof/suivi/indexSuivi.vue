@@ -4,7 +4,7 @@
     
     <v-card class="transparent" >
       <v-card-title> 
-        <h2>selectionez 3 sujet parmi ces sujets :</h2>
+        <h2>Liste des Sujet Attribué:</h2>
     	  <v-spacer></v-spacer>
           <v-text-field
           append-icon="search"
@@ -16,8 +16,7 @@
       </v-card-title>
       <v-layout v-for="sujet in sujets" :key="sujet._id"><br>
         <v-flex offset-md1 offset-xs1 offset-sm1 offset-lg1 xs10 sm10 md10 lg10 xl10><br>
-          
-          <v-card v-bind:class="{'green accent-3' : sujet.selected, 'white' : !sujet.selected }" > 
+          <v-card> 
             <v-card-title primary-title>
               <v-flex md5 >
                 <h3 class="headline mb-0">{{ sujet.titre }}</h3><br>
@@ -31,10 +30,18 @@
               </v-flex> 
             </v-card-title>
             <v-divider></v-divider>
+            <v-card-text>
+              <v-layout row wrap>
+                <v-flex md3 lg3 mb-2> <v-icon>fas fa-user-circle</v-icon> {{sujet.name}} </v-flex>
+                <v-flex md9 lg9><v-icon>fas fa-at</v-icon> {{sujet.mail}}  </v-flex>
+              </v-layout>
+            </v-card-text>
+            <v-divider></v-divider>
+            
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn v-bind:class="{'success' : sujet.selected}" @click="addSelcted(sujet)">
-                <v-icon>check_circle</v-icon>Selectionner
+              <v-btn @click="suivi(sujet._id)" class="primary" >
+                <v-icon>fas fa-clipboard-check</v-icon> &nbsp; suiver  
               </v-btn>           
             </v-card-actions>
           </v-card>
@@ -43,20 +50,7 @@
     </v-card><br><br>   
 
       
-    <v-dialog v-model="alert"  max-width="350">
-      <v-card>
-        <v-card-title class="headline"  >
-          <v-icon size="40px" color="info" >help</v-icon>{{ mMessage.title }}               
-        </v-card-title>
-        <v-card-text>
-              
-        </v-card-text>  
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn flat="flat" @click.native="hideAlert()">ok</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+   
   </div>
 </template>
 
@@ -69,15 +63,8 @@
     data: () => ({
 
       colors:['green darken-1','light-green darken-1','lime darken-1','teal darken-1','cyan darken-1','light-blue darken-1','blue darken-1','indigo darken-1','deep-purple darken-1','blue-grey darken-1','brown darken-1'],
-      
       search: '',
-      mMessage: {title: '', body:''},
-      dialog: false,
-      alert: false,
-
-      items: [],
-      selectedItems: [],
-      allitems: []
+      allitems: [],
       
     }),
 
@@ -86,19 +73,6 @@
     },
 
     computed: {
-
-      send_choix_btn(){
-
-        if(this.selectedItems.length < 3 ) return false
-        else return true
-
-      },
-
-      selectedItemscomp(){
-
-        return this.selectedItems
-
-      },
 
       randomColor(){
 
@@ -112,6 +86,8 @@
           return this.allitems.filter(function(sujet){
             return (sujet.titre.toLowerCase().match(self.search.toLowerCase()) ||
               sujet.description.toLowerCase().match(self.search.toLowerCase()) ||
+              sujet.name.toLowerCase().match(self.search.toLowerCase()) ||
+              sujet.mail.toLowerCase().match(self.search.toLowerCase()) ||
               sujet.technologies.toLowerCase().match(self.search.toLowerCase())
             )
               
@@ -129,78 +105,41 @@
 
     methods: {
 
-    
-
-      hideAlert(){
-        this.alert=false 
+      suivi(id){
+        this.$router.push('/sujets/suivi/'+ id)
       },
-
-      delSelected(item){ 
-
-        this.selectedItems.splice(this.selectedItems.indexOf(item),1)
-        this.allitems.find(x => x._id === item._id).selected = false
-        
-      },
-
-      addSelcted(item){
-        
-        if(this.selectedItems.includes(item)){  
-
-          this.selectedItems.splice(this.selectedItems.indexOf(item),1)
-          this.allitems.find(x => x._id === item._id).selected = false
-
-        }else{
-
-          if(this.selectedItems.length < 3 ){ 
-
-            item.i = this.selectedItems.length + 1
-            this.selectedItems.push(item);
-            this.allitems.find(x => x._id === item._id).selected = true
-
-          }
-          
-          else{
-            this.mMessage.title = 'vous avez depasser 3 choix'
-            this.alert=true
-          }
-        
-        }
-
-      },
-       
+  
       initialize () {
-        var choixs = []
-        axios.get('http://localhost:9000/api/choix/'+this.$store.getters.authUser._id).then((res) => {
-
-          choixs = res.data
-         
-        });
-        
-        axios.get('http://localhost:9000/api/student/'+this.$store.getters.authUser._id).then((res) => {
-          axios.get('http://localhost:9000/api/sujetbyf/'+res.data.filiere_id).then((resp) => {
-            
-            resp.data.forEach(element=>{
-              element.selected = false
-            })
-
-            resp.data.forEach(element => {
-              
-              choixs.forEach(item=>{
-                if(item.sujet_id === element._id){
-                  element.selected = true
-                  this.selectedItems.push(element)
-                }
-                  
-              })
-              element.techs = element.technologies.split(',')
-            });
-            this.allitems = this.items = resp.data;
-                        console.log(this.allitems)
-
-          });
-        });
-
        
+        axios.get('http://localhost:9000/api/sujetAtt/'+this.$store.getters.authUser._id).then((resp) => {
+            
+
+                resp.data.forEach(element => {
+                  
+                  var item = {
+
+                    _id: element._id,
+                    titre: element.titre,
+                    description: element.description ,
+                    technologies:element.technologies ,
+                    filiere_id:element.filiere_id ,  
+                    professor_id:element.professor_id ,
+                    student_id:element.student_id
+
+                  }
+
+                item.techs = element.technologies.split(',')
+                axios.get('http://localhost:9000/api/studentById/'+element.student_id).then((respo) => {
+                  axios.get('http://localhost:9000/api/user/'+respo.data.user_id).then((respon) => {
+                    item.name = respon.data.nom + " " +respon.data.prenom
+                    item.mail =  respon.data.email
+                    this.allitems.push(item)
+                  })
+                })
+            });
+            
+
+        });
             
       }
       

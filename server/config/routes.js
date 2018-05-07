@@ -5,6 +5,9 @@ const filiereController     =   require('../controller/filiereController')      
 const studentController     =   require('../controller/studentController')      ;
 const choixController       =   require('../controller/choixController')        ;
 const soutenanceController  =   require('../controller/SoutenanceController')   ;
+const MessageController     =   require('../controller/messageController')   ;
+const fileController     =   require('../controller/fileController')   ;
+
 
 module.exports              =   function(app, router) {
 
@@ -53,7 +56,14 @@ router.route('/user/:id*').get(function(req, res) { userController.getUser(req, 
     router.route('/addprojet/:id*?')
         .post(function(req, res) {sujetController.addStudent(req, res)}) 
 
-   
+    router.route('/sujetAtt/:id*')
+        .get((req, res)=>{ sujetController.getAttSujet(req, res) });
+
+    router.route('/sujetByUser/:id*')   
+        .get((req, res)=>{ sujetController.getSujetByUser(req, res) });
+
+    
+
 
 //______________________________________________________________________________________________
 //----------------------------------Student API----------------------------------------------------
@@ -67,6 +77,11 @@ router.route('/user/:id*').get(function(req, res) { userController.getUser(req, 
 
     router.route('/student/:id*')
         .get((req, res)=>{ studentController.getStudent(req, res) });
+
+    router.route('/studentById/:id*')
+        .get((req, res)=>{ studentController.getStudentById(req, res) });
+
+    
 
 //______________________________________________________________________________________________
 //----------------------------------Professor API----------------------------------------------------
@@ -92,7 +107,8 @@ router.route('/user/:id*').get(function(req, res) { userController.getUser(req, 
         .delete(function(req, res) {choixController.delete(req, res)});
 
     router.route('/choixs/:id*?').get(function(req, res){choixController.getStudentsPerSujet(req, res)})
- 
+        .delete(function(req, res){choixController.deleteByStudent(req, res)})
+   
 
 //______________________________________________________________________________________________
 //----------------------------------Soutenance--------------------------------------------------
@@ -101,5 +117,24 @@ router.route('/user/:id*').get(function(req, res) { userController.getUser(req, 
 
     router.route('/soutenance/')
         .post(function(req, res) { soutenanceController.create(req, res)})
+
+//______________________________________________________________________________________________
+//----------------------------------Messages API--------------------------------------------------
+//______________________________________________________________________________________________
+
+
+router.route('/messages/:id*?')
+.post(function(req, res) { MessageController.create(req, res)})
+.get(function(req, res) { MessageController.index(req, res) } )
+
+
+//______________________________________________________________________________________________
+//----------------------------------files API--------------------------------------------------
+//______________________________________________________________________________________________
+
+
+router.route('/files/:id*?')
+.get(function(req, res) { fileController.index(req, res) } )
+
 
 }

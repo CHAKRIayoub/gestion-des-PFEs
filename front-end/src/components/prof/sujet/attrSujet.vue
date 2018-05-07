@@ -148,8 +148,16 @@
                             jury: this.jury.toString()
                         }).then(()=>{
                             console.log('yes')
+                            //delete choises
+                            axios.delete('http://localhost:9000/api/choixs/' +this.$store.getters.getAttrUser).then((response) => {
+                                console.log('yes')
+                            }).catch((error)=>{
+                                console.log('no s')
+                            }) 
+
                             this.$router.push('/sujets');
-                        }).catch((error)=>{
+                       
+                       }).catch((error)=>{
                             console.log('no s')
                         })
                                  

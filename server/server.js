@@ -11,7 +11,11 @@ app.use(bodyParser.json());
 var port       = process.env.PORT || 9000; 
 var router     = express.Router(); 
 
+app.use('/uploads', express.static('uploads'));
+
 require('./config/routes')(app, router);
+require('./helpers/uploadFile')(app, router);
+
 app.use('/api', router);
 
 app.listen(port);

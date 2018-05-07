@@ -2,6 +2,19 @@ var Student     = require('../models/student');
 
 module.exports = {
 
+    getStudentById: (req, res) => {
+
+        Student.findOne({_id: req.params.id} ,(err, student) => {
+
+            if (err)
+                res.send(err);
+        
+            res.json(student);
+
+        });
+
+    },
+
     getStudent: (req, res) => {
 
         Student.findOne({user_id: req.params.id} ,(err, student) => {

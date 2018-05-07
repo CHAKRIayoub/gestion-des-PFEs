@@ -84,7 +84,8 @@ export default {
             var menu = []
             if(user){
                 var id_menu = (user.role == "professor")?1:2;
-                var to = (id_menu==1)?"/student":"/professor"
+                var to = (id_menu==1)?"/professor":"/student"
+                to = to+"/home"
 
                 axios.get('http://localhost:9000/api/menu/'+id_menu).then((res) => {
                     menu = res.data

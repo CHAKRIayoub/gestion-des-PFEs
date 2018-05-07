@@ -6,7 +6,7 @@
         
         <v-spacer></v-spacer> 
                         
-		<v-btn color="success" dark to="/sujets/add" ><v-icon>add</v-icon> Ajouter Un Sujet </v-btn>
+		<v-btn color="success" dark to="/sujets/add" ><v-icon>fas fa-plus-circle</v-icon> &nbsp; Ajouter Un Sujet </v-btn>
 
 
       <br><br>
@@ -14,7 +14,7 @@
     <v-card-title> 
     	<v-spacer></v-spacer>
         <v-text-field
-        append-icon="search"
+        append-icon="fas fa-search"
         label="Search"
         single-line
         hide-details
@@ -26,7 +26,7 @@
 	:headers="headers"
 	:items="items"
 	:search="search"
-	hide-actions
+  rows-per-page-text="sujets par page"
 	class="elevation-1"
     >
 		<template slot="items" slot-scope="props">
@@ -40,15 +40,16 @@
       </td>
 			<td class="text-xs-left">{{ getF(props.item.filiere_id) }}</td>
 			<td class="justify-center layout px-0">
+         &nbsp; 
 			<v-btn  icon class="mx-0" @click="editItem(props.item)">
-				<v-icon color="primary">edit</v-icon>
-			</v-btn>
+				<v-icon color="primary">fas fa-pencil-alt</v-icon>
+			</v-btn> &nbsp; 
 			<v-btn  icon  class="mx-0" @click="showconfirmDel(props.item)">
-				<v-icon color="error">delete</v-icon>
-			</v-btn>
+				<v-icon color="error">fas fa-trash-alt</v-icon>
+			</v-btn> &nbsp; 
       <v-btn  icon  class="mx-0" @click="showSujet(props.item._id)" >
-				<v-icon color="success">group</v-icon>
-			</v-btn>
+				<v-icon color="success">fas fa-users</v-icon>
+			</v-btn> &nbsp; 
 			</td>
 		</template>
 
@@ -63,6 +64,8 @@
 		</v-alert>
             
   </v-data-table>
+
+  
 </v-card>
 
 
@@ -71,10 +74,7 @@
      <v-dialog v-model="delalert"  max-width="350">
       <v-card>
         <v-card-title class="headline" style="color: red;" >
-            
-                     <v-icon size="40px" color="error" >delete</v-icon>{{ mMessage.title }}
-               
-             <!-- {{ mMessage.title }} -->
+          <v-icon size="40px" color="error" >fas fa-trash-alt</v-icon>{{ mMessage.title }}               
         </v-card-title>
         <v-card-text>
             <v-flex style="background:#4caf50; width:100% " >
@@ -100,6 +100,7 @@ import axios from 'axios';
 export default {
 
     data: () => ({
+      pagination: {},
       chargement: true,
       colors:['light-blue', 'teal', 'blue', 'indigo', 'lime', 'green', 'light-green', 'amber', 'orange', 'deep-orange'],
       deleteItem: true,
@@ -109,7 +110,7 @@ export default {
       search: '',
       dialog: false,
       headers: [
-        {text: 'Titre', sortable: false, value: 'titre'},
+        {text: 'Titre', value: 'titre'},
         { text: 'Description', value: 'description' },
         { text: 'Technologies', value: 'technologies' },
         { text: 'Filiere', value: 'filiere' },

@@ -25,9 +25,11 @@
             ></v-text-field><br><br>
 
             <v-select
-            v-model="jury"
+            append-icon="fas fa-angle-down"
+            v-model="selectedTech"
             label="Technologies"
-            :rules="[v => !!v || 'item required']"
+            :rules="[() => !!selectedTech || 'obligatoire']"
+            :items="autotechs"
             chips
             tags
             deletable-chips
@@ -37,8 +39,9 @@
 
             <v-select
             v-model="selectedFiliere"
+            append-icon="fas fa-angle-down"
             label="Filiere"
-            :rules="[v => !!v || 'item required']"
+            :rules="[() => !!selectedFiliere || 'item required']"
             :items="itemsFiliere"
             required
             return-object
@@ -73,7 +76,7 @@
       <v-card   >
         <v-card-title class="headline" style="color: green;" >
             
-                     <v-icon size="40px" color="success" >check_circle</v-icon>{{ mMessage.title }}
+                     <v-icon size="40px" color="success" >fas fa-check_circle</v-icon>{{ mMessage.title }}
                
              <!-- {{ mMessage.title }} -->
         </v-card-title>
@@ -98,6 +101,7 @@ import axios from 'axios';
 export default {
 
     data: () => ({
+        autotechs: ['Java','C#','C','C++','Php','Node.js','MySql','MongoDb','Sql Server','Oracle DB','Vue.js','Angular','React','Matlab','UML','REST API','SOAP','SPA','Express','Laravel','Socket.io','nginx','apache'],
         dialog : false,
         mMessage: {title: '', body:''},
         itemsTechnologies: ['Programming','Design','Vue','Vuetify'],

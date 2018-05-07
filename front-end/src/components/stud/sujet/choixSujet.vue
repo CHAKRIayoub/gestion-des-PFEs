@@ -63,6 +63,15 @@
       </v-card-actions>
     </v-card>
 
+<v-dialog v-model="dialog" persistent max-width="290">
+      <v-btn slot="activator" color="primary" dark>Open Dialog</v-btn>
+      <v-card>
+        <v-card-title class="headline">Use Google's location service?</v-card-title>
+        <v-card-text>Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running.</v-card-text>
+       
+      </v-card>
+    </v-dialog>
+
       
     <v-dialog v-model="alert"  max-width="350">
       <v-card>
@@ -90,7 +99,7 @@
     data: () => ({
 
       colors:['green darken-1','light-green darken-1','lime darken-1','teal darken-1','cyan darken-1','light-blue darken-1','blue darken-1','indigo darken-1','deep-purple darken-1','blue-grey darken-1','brown darken-1'],
-      
+      dialog:true,
       search: '',
       mMessage: {title: '', body:''},
       dialog: false,
@@ -210,6 +219,7 @@
        
       initialize () {
         var choixs = []
+        
         axios.get('http://localhost:9000/api/choix/'+this.$store.getters.authUser._id).then((res) => {
 
           choixs = res.data
@@ -217,7 +227,12 @@
         });
         
         axios.get('http://localhost:9000/api/student/'+this.$store.getters.authUser._id).then((res) => {
+          
+          
+          
           axios.get('http://localhost:9000/api/sujetbyf/'+res.data.filiere_id).then((resp) => {
+            
+
             
             resp.data.forEach(element=>{
               element.selected = false
@@ -239,6 +254,9 @@
 
           });
         });
+
+
+        this.dialog = true
 
        
             
